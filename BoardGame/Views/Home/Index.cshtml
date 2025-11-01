@@ -22,7 +22,7 @@
         JOIN dbo.GameCategory as gc 
         ON b.BGGId = gc.BGGId
         JOIN dbo.Category as c
-        ON gc.CategoryID = c.CategoryID
+        ON gc.Category = c.Category
         WHERE b.Name LIKE '%' + @0 + '%'
         ORDER BY b.Name";
 
@@ -93,7 +93,7 @@
         @if (data.Count() > 0)
         {
 
-            @foreach (var item in data)
+            foreach (var item in data)
             {
                 <div class="col">
                     <div class="card col-3 m-1">
@@ -129,6 +129,9 @@
         document.getElementById("cardView").style.display = "none";
     }
 
-    function
+    function showCardView() {
+        document.getElementById("tableView").style.display = "none";
+        document.getElementById("cardView").style.display = "block";
+    }
 
 </script>
