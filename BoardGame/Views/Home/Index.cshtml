@@ -44,11 +44,8 @@
 
     <!--Create option to view data in table mode or card mode-->
     <div class="mb-3">
-        <label for="viewSelector" class="form-label">Choose view:</label>
-        <select id="viewSelector" class="form-select">
-            <option value="tableview">Table View</option>
-            <option value="cardview">Card View</option>
-        </select>
+        <button id="showTable" class="btn btn-outline-primary" onclick= "showTableView()">Table View</button>
+        <button id="showCard" class=" btn btn-outline-secondary" onclick= "showCardView()">Card View</button>
     </div>
 
     <div id="tableView" style="display:block">
@@ -125,10 +122,13 @@
         }
     </div>
 </form>
+<!--Add script to choose the view option-->
 <script>
     function showTableView() {
         document.getElementById("tableView").style.display = "block";
         document.getElementById("cardView").style.display = "none";
     }
+
+    function
 
 </script>
