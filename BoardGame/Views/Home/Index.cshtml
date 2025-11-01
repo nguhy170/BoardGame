@@ -101,33 +101,34 @@
                 <div class="col">
                     <div class="card col-3 m-1">
                         <img src="@item.ImagePath" class="card-img-top" alt="@item.Name" style="height:100px;object-fit:cover" />
-                            <div class="card-body">
-                                <h5 class="card-title">@item.Name @item.Year</h5>
-                                <p class="card-text">@item.Description</p>
-                                <ul class="list-styled">
-                                    <li><strong>Family:</strong>@item.Family</li>
-                                    <li><strong>Category:</strong>@item.CategoryName</li>
-                                    <li><strong>Game Weight:</strong>@item.GameWeight</li>
-                                    <li><strong>Minimum Players:</strong>@item.MinPlayers</li>
-                                    <li><strong>Maximum Players:</strong>@item.MaxPlayers</li>
-                                    <li><strong>Age Recommend:</strong>@item.MfgAgeRec</li>
-                                    <li><strong>Ranking:</strong>@item.RankInboardgame</li>
-                                </ul>
-                                }
-
-                            </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name @item.Year</h5>
+                            <p class="card-text">@item.Description</p>
+                            <ul class="list-styled">
+                                <li><strong>Family:</strong>@item.Family</li>
+                                <li><strong>Category:</strong>@item.CategoryName</li>
+                                <li><strong>Game Weight:</strong>@item.GameWeight</li>
+                                <li><strong>Minimum Players:</strong>@item.MinPlayers</li>
+                                <li><strong>Maximum Players:</strong>@item.MaxPlayers</li>
+                                <li><strong>Age Recommend:</strong>@item.MfgAgeRec</li>
+                                <li><strong>Ranking:</strong>@item.RankInboardgame</li>
+                            </ul>
+                            <a href="/Home/Details?id=@item.BGGId" class="btn btn-secondary" target="_blank">View Detail</a>
+                        </div>
+                    </div>
                 </div>
+            }
         }
         else
         {
         <h2 class="text-danger">Ooops... No board game matching records were returned!</h2>
         }
     </div>
-
 </form>
 <script>
     function showTableView() {
         document.getElementById("tableView").style.display = "block";
-        document.getElementById().style.display = "none";
+        document.getElementById("cardView").style.display = "none";
     }
+
 </script>
