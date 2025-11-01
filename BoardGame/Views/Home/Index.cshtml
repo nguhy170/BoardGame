@@ -8,10 +8,23 @@
 
     //define the query to be run
     var selectQueryString = @"
-SELECT BGGId, Name, YEAR(YearPublished) AS Year, ROUND(GameWeight,1) AS GameWeight, MinPlayers , MaxPlayers, MfgAgeRec, RankInboardgame
-FROM dbo.BoardGame
-WHERE Name LIKE '%' + @0 + '%'
-ORDER BY Year DESC";
+        SELECT b.BGGId, 
+               b.Name, 
+               b.YEAR(YearPublished) AS Year, 
+               b.ROUND(GameWeight,1) AS GameWeight, 
+               b.MinPlayers, 
+               b.MaxPlayers,
+               b.MfgAgeRec,
+               b.RankInboardgame,
+               b.Family,
+               c.Category
+        FROM dbo.BoardGame as b
+        JOIN dbo.GameCategory as gc 
+        ON b.BGGId = gc.BGGId
+        JOIN dbo.Category as c
+        ON gc.CategoryID = c.CategoryID
+        WHERE b.Name LIKE '%' + @0 + '%'
+        ORDER BY b.Name";
 
 
     var data = db.Query(selectQueryString, searchText);
@@ -82,42 +95,36 @@ ORDER BY Year DESC";
     <div id="cardView" style="display:none">
         @if (data.Count() > 0)
         {
-            <div class="col-12">
-                <table class="table table-striped" style="table-layout: fixed; width: 100%;">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Year</th>
-                            <th scope="col">Game Weight</th>
-                            <th scope="col">Min Players</th>
-                            <th scope="col">Max Players</th>
-                            <th scope="col">Age Recommend</th>
-                            <th scope="col">Ranking</th>
-                            <th scope="col">Details</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in data)
-                        {
-                            <tr>
-                                <td>@item.BGGId</td>
-                                <td>@item.Name</td>
-                                <td>@item.Year</td>
-                                <td>@item.GameWeight</td>
-                                <td>@item.MinPlayers</td>
-                                <td>@item.MaxPlayers</td>
-                                <td>@item.MfgAgeRec</td>
-                                <td>@item.RankInboardgame</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+
+            @foreach (var item in data)
+            {
+                <div class="col">
+                    <div class="card col-3 m-1">
+                        <img src="@item.ImagePath" class="card-img-top" alt="@item.Name" style="height:100px;object-fit:cover" />
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Name @item.Year</h5>
+                                <p class="card-text">@item.Description</p>
+                                <ul class="list-styled">
+                                    <li><strong>Family:</strong>@item.Family</li>
+                                </ul>
+                                <tr>
+                                    <td>@item.BGGId</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Year</td>
+                                    <td>@item.GameWeight</td>
+                                    <td>@item.MinPlayers</td>
+                                    <td>@item.MaxPlayers</td>
+                                    <td>@item.MfgAgeRec</td>
+                                    <td>@item.RankInboardgame</td>
+                                </tr>
+                                }
+
+                            </div>
+                </div>
         }
         else
         {
-            <h2 class="text-danger">Ooops... No board game matching records were returned!</h2>
+        <h2 class="text-danger">Ooops... No board game matching records were returned!</h2>
         }
     </div>
 
