@@ -10,8 +10,8 @@
     var selectQueryString = @"
         SELECT b.BGGId, 
                b.Name, 
-               b.YEAR(YearPublished) AS Year, 
-               b.ROUND(GameWeight,1) AS GameWeight, 
+               YEAR(b.YearPublished) AS Year, 
+               ROUND(b.GameWeight,1) AS GameWeight, 
                b.MinPlayers, 
                b.MaxPlayers,
                b.MfgAgeRec,
