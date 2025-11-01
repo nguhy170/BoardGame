@@ -5,12 +5,13 @@
     var db = Database.Open("BoardGame");
     var searchText = Request.QueryString["searchText"] ?? "";
 
+
     //define the query to be run
     var selectQueryString = @"
-        SELECT BGGId, Name, YEAR(YearPublished) AS Year, ROUND(GameWeight,1) AS GameWeight, MinPlayers , MaxPlayers, MfgAgeRec, RankInboardgame
-        FROM dbo.BoardGame
-        WHERE Name LIKE '%' + @0 + '%'
-        ORDER BY Year DESC";
+SELECT BGGId, Name, YEAR(YearPublished) AS Year, ROUND(GameWeight,1) AS GameWeight, MinPlayers , MaxPlayers, MfgAgeRec, RankInboardgame
+FROM dbo.BoardGame
+WHERE Name LIKE '%' + @0 + '%'
+ORDER BY Year DESC";
 
 
     var data = db.Query(selectQueryString, searchText);
@@ -27,42 +28,103 @@
     <div class="col-2 mt-5 mb-2">
         <button type="submit" class="btn btn-primary">Search</button>
     </div>
-    @if (data.Count() > 0)
-    {
-        <div class="col-12">
-            <table class="table table-striped" style="table-layout: fixed; width: 100%;">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Year</th>
-                        <th scope="col">Game Weight</th>
-                        <th scope="col">Min Players</th>
-                        <th scope="col">Max Players</th>
-                        <th scope="col">Age Recommend</th>
-                        <th scope="col">Ranking</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in data)
-                    {
+
+    <!--Create option to view data in table mode or card mode-->
+    <div class="mb-3">
+        <label for="viewSelector" class="form-label">Choose view:</label>
+        <select id="viewSelector" class="form-select">
+            <option value="tableview">Table View</option>
+            <option value="cardview">Card View</option>
+        </select>
+    </div>
+
+    <div id="tableView" style="display:block">
+        @if (data.Count() > 0)
+        {
+            <div class="col-12">
+                <table class="table table-striped" style="table-layout: fixed; width: 100%;">
+                    <thead>
                         <tr>
-                            <td>@item.BGGId</td>
-                            <td>@item.Name</td>
-                            <td>@item.Year</td>
-                            <td>@item.GameWeight</td>
-                            <td>@item.MinPlayers</td>
-                            <td>@item.MaxPlayers</td>
-                            <td>@item.MfgAgeRec</td>
-                            <td>@item.RankInboardgame</td>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Year</th>
+                            <th scope="col">Game Weight</th>
+                            <th scope="col">Min Players</th>
+                            <th scope="col">Max Players</th>
+                            <th scope="col">Age Recommend</th>
+                            <th scope="col">Ranking</th>
+                            <th scope="col">Details</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <h2 class="text-danger">Ooops... No board game matching records were returned!</h2>
-    }
+                    </thead>
+                    <tbody>
+                        @foreach (var item in data)
+                        {
+                            <tr>
+                                <td>@item.BGGId</td>
+                                <td>@item.Name</td>
+                                <td>@item.Year</td>
+                                <td>@item.GameWeight</td>
+                                <td>@item.MinPlayers</td>
+                                <td>@item.MaxPlayers</td>
+                                <td>@item.MfgAgeRec</td>
+                                <td>@item.RankInboardgame</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <h2 class="text-danger">Ooops... No board game matching records were returned!</h2>
+        }
+    </div>
+    <div id="cardView" style="display:none">
+        @if (data.Count() > 0)
+        {
+            <div class="col-12">
+                <table class="table table-striped" style="table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Year</th>
+                            <th scope="col">Game Weight</th>
+                            <th scope="col">Min Players</th>
+                            <th scope="col">Max Players</th>
+                            <th scope="col">Age Recommend</th>
+                            <th scope="col">Ranking</th>
+                            <th scope="col">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in data)
+                        {
+                            <tr>
+                                <td>@item.BGGId</td>
+                                <td>@item.Name</td>
+                                <td>@item.Year</td>
+                                <td>@item.GameWeight</td>
+                                <td>@item.MinPlayers</td>
+                                <td>@item.MaxPlayers</td>
+                                <td>@item.MfgAgeRec</td>
+                                <td>@item.RankInboardgame</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <h2 class="text-danger">Ooops... No board game matching records were returned!</h2>
+        }
+    </div>
+
 </form>
+<script>
+    function showTableView() {
+        document.getElementById("tableView").style.display = "block";
+        document.getElementById().style.display = "none";
+    }
+</script>
