@@ -4,13 +4,60 @@
     padding-left: 15px;
     padding-right: 15px;
 }
-
+/* Color for headings and buttons*/
 body {
-    background-color: lightblue
+    background-color: #000000;
 }
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
+
+h2 {
+    color: #114382;
+}
+.bg-light {
+    background-color: #d6e6fc !important;
+}
+.btn-primary {
+    background-color: #4038db;
+    border-color: #0e3670;
+}
+.btn-primary:hover{
+    background-color: #0e3670;
+    border-color: #0a2547;
+}
+.btn-secondary {
+    background-color: #114382;
+}
+.btn-secondary:hover {
+    background-color: #417ecf;
+}
+.btn-outline-primary {
+    color: #ffffff;
+    background-color: #1e65a9;
+    border-color: #114382;
+}
+.btn-outline-primary:hover {
+    color: #000000;
+    background-color: #b7e3f9;
+    border-color: #0e3670;
+}
+.btn-outline-secondary {
+    color: #ffffff;
+    background-color: #06229e;
+    border-color: #06229e;
+}
+.btn-outline-secondary:hover {
+    color: #000000;
+    background-color: #aac3fd;
+    border-color: #aac3fd;
+}
+/* Table design */
+.table {
+    background-color: #cfeefd;
+    border-color: #14597b;
+}
+.table th {
+    background-color: #114382;
+    color: #ffffff;
+}
 .dl-horizontal dt {
     white-space: normal;
 }
