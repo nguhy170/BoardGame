@@ -2,7 +2,7 @@
 
 @{
     //open database
-    var db = Database.Open("AmazonOrders");
+    var db = Database.Open("BoardGame");
 
     var id = Request.QueryString["id"];
 
@@ -23,7 +23,7 @@
         FROM dbo.BoardGame as b
         JOIN dbo.GameCategory as gc ON b.BGGId = gc.BGGId
         JOIN dbo.Category as c ON gc.Category = c.CategoryID
-        WHERE b.BGG.Id = @0";
+        WHERE b.BGGId = @0";
 
     var data = db.QuerySingle(selectQueryString, id);
 }
@@ -34,34 +34,31 @@
 
 @if (data != null)
 {
-    <div class="row justify-content-center">
-        @foreach (var item in data)
-        {
-            <div class="col">
+    <div class="row justify-content-center mt-5">
+            <div class="col-md-5">
                 <div class="card h-100">
-                    <img src="@item.ImagePath" class="card-img-top" alt="@item.Name" style="height:100px;object-fit:cover" />
+                    <img src="@data.ImagePath" class="card-img-top" alt="@data.Name" style="height:300px;object-fit:cover" />
                     <div class="card-body">
-                        <h3 class="card-title"> @item.Name </h3>
-                        <p1 class="card-text"> @item.Year </p1>
-                        <p1 class="card-text"> @item.Description </p1>
+                        <h2 class="card-title"> @data.Name </h2>
+                        <p class="card-text"> @data.Description </p>
                         <ul class="list-styled">
-                            <li><strong> Family: </strong> @item.Family </li>
-                            <li><strong> Category: </strong> @item.CategoryName </li>
-                            <li><strong> Game Weight: </strong> @item.GameWeight </li>
-                            <li><strong> Minimum Players: </strong> @item.MinPlayers </li>
-                            <li><strong> Maximum Players: </strong> @item.MaxPlayers </li>
-                            <li><strong> Age Recommend: </strong> @item.MfgAgeRec </li>
-                            <li><strong> Ranking: </strong> @item.RankInboardgame </li>
+                            <li><strong> Year: </strong> @data.Year </li>
+                            <li><strong> Family: </strong> @data.Family </li>
+                            <li><strong> Category: </strong> @data.CategoryName </li>
+                            <li><strong> Game Weight: </strong> @data.GameWeight </li>
+                            <li><strong> Minimum Players: </strong> @data.MinPlayers </li>
+                            <li><strong> Maximum Players: </strong> @data.MaxPlayers </li>
+                            <li><strong> Age Recommend: </strong> @data.MfgAgeRec </li>
+                            <li><strong> Ranking: </strong> @data.RankInboardgame </li>
                         </ul>
-                        <a href="/Home/Details?id=@item.BGGId" class="btn btn-secondary" target="_blank"> View Detail </a>
+                        <a href="/Home/Index" class="btn btn-secondary" target="_blank">Back to Games List</a>
                     </div>
                 </div>
             </div>
-        }
     </div>
 }
 else
 {
-    <h2 class="text-danger text-center">Ooops - That product was not found!</h2>
+    <h2 class=" mt-5 text-danger text-center">Ooops - That board games was not found!</h2>
 }
 
