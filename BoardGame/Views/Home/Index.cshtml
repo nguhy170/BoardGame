@@ -34,8 +34,7 @@
         FROM dbo.BoardGame as b
         JOIN dbo.GameCategory as gc ON b.BGGId = gc.BGGId
         JOIN dbo.Category as c ON gc.Category = c.CategoryID
-        WHERE b.Name LIKE '%' + @0 + '%'
-        ORDER BY b.Name";
+        WHERE b.Name LIKE '%' + @0 + '%'";
 
     //add condition when selecting the category name
     //if the variable selectcategories not an empty string
@@ -50,7 +49,7 @@
     //Execute query whether category is selected or not
     var data = (selectedcategories != "")
         //If not empty string, run the category search
-        ? db.Query(selectQueryString, searchText, selectedcategories)
+        ? db.Query(selectQueryString, searchText, selectedcategories) 
         //Else, run the board game search
         : db.Query(selectQueryString, searchText);
 
@@ -71,30 +70,29 @@
 
 <form action="/Home/Index" method="get" class="row">
     <input type="hidden" id="showView" name="showView" value="@showView" />
-    <div class="col-2 mt-5 mb-2">
+    <div class="col-2 mt-5 mb-2 justify-content-start">
         <input type="text" name="searchText" value="@searchText" placeholder="Search Products..." class="form-control" />
     </div>
-
     <div class="col-2 mt-5 mb-2">
         <button type="submit" class="btn btn-primary">Search</button>
     </div>
 
-    <div class="col-6 mt-5">
-        <select name="searchCategory" class="form-control">
-            <option value="" @IsSelected("")>All Categories</option>
-            @foreach (var cat in categories)
-            {
-                var catName = cat.Category;
-                <option value="@catName" @(catName == selectedcategories ? "selected" : "")>@catName</option>
-            }
-        </select>
-    </div>
-    <div class="col-5 mt-5 mb-2">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
+    <div class="col-12 mt-2 mb-2">
+        <div class="d-flex gap-4">
+            <select name="searchCategory" class="form-control">
+                <option value="" @IsSelected("")>All Categories</option>
+                @foreach (var cat in categories)
+                {
+                    var catName = cat.Category;
+                    <option value="@catName" @(catName == selectedcategories ? "selected" : "")>@catName</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
 
+        </div>
+    </div>
     <!--Create button options to view data in table mode or card mode-->
-    <div class="col-8 mt-5 mb-2 d-flex justify-content-end gap-2">
+    <div class="col-12 mt-1 mb-2 d-flex justify-content-end gap-2">
         <button type="submit" id="showTable" class="btn btn-outline-primary" onclick="document.getElementById('showView').value = 'table'">Table View</button>
         <button type="submit" id="showCard" class=" btn btn-outline-secondary" onclick="document.getElementById('showView').value = 'card'">Card View</button>
     </div>
@@ -103,7 +101,7 @@
     {
         if (showView == "table")
         {
-            <div id = "tableView" >
+            <div id="tableView">
                 <div class="col-12">
                     <table class="table table-striped" style="table-layout: fixed; width: 100%;">
                         <thead>
@@ -115,63 +113,67 @@
                                 <th scope="col"> Min Players</th>
                                 <th scope="col"> Max Players</th>
                                 <th scope="col"> Age Recommend</th>
-                                <th scope="col">Ranking </th >
-                                <th scope= "col"> Details </th >
+                                <th scope="col">Ranking </th>
+                                <th scope="col"> Details </th>
                             </tr>
-                          </thead>
-                            <tbody>
-                                @foreach (var item in data)
-                                {
-                                    <tr>
-                                        <td > @item.BGGId </td >
-                                        <td > @item.Name </td >
-                                        <td > @item.Year </td >
-                                        <td > @item.GameWeight </td >
-                                        <td > @item.MinPlayers </td >
-                                        <td > @item.MaxPlayers </td >
-                                        <td > @item.MfgAgeRec </td >
-                                        <td > @item.RankInboardgame </td >
-                                        <td >
-                                            <a href = "/Home/Details?id=@item.BGGId" class="btn btn-sm btn-secondary">View Detail</a>
-                                        </td>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in data)
+                            {
+                                <tr>
+                                    <td> @item.BGGId </td>
+                                    <td> @item.Name </td>
+                                    <td> @item.Year </td>
+                                    <td> @item.GameWeight </td>
+                                    <td> @item.MinPlayers </td>
+                                    <td> @item.MaxPlayers </td>
+                                    <td> @item.MfgAgeRec </td>
+                                    <td> @item.RankInboardgame </td>
+                                    <td>
+                                        <a href="/Home/Details?id=@item.BGGId" class="btn btn-sm btn-secondary">View Detail</a>
+                                    </td>
 
-                                    </tr>
-                                }
-                            </tbody>
+                                </tr>
+                            }
+                        </tbody>
                     </table>
                 </div>
             </div>
         }
         else if (showView == "card")
         {
-            <div id = "cardView">
-                <div class= "row row-cols-1 row-cols-md-3 g-4">
+            <div id="cardView">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
                     @foreach (var item in data)
                     {
-                        <div class= "col">
-                            <div class= "card h-100">
-                                <img src = "@item.ImagePath" class= "card-img-top" alt = "@item.Name" style = "height:100px;object-fit:cover" />
-                                <div class= "card-body">
-                                    <h5 class= "card-title" > @item.Name </h5>
-                                    <p class= "card-text" > @item.Year </p>
-                                    <p class= "card-text" > @item.Description </p>
-                                    <ul class= "list-styled" >
-                                        <li>< strong > Family: </ strong > @item.Family </li >
-                                        <li>< strong > Category: </ strong > @item.CategoryName </li >
-                                        <li>< strong > Game Weight: </ strong > @item.GameWeight </li >
-                                        <li>< strong > Minimum Players: </ strong > @item.MinPlayers </li >
-                                        <li>< strong > Maximum Players: </ strong > @item.MaxPlayers </li >
-                                        <li>< strong > Age Recommend: </ strong > @item.MfgAgeRec </li >
-                                        <li>< strong > Ranking: </ strong > @item.RankInboardgame </li >
+                        <div class="col">
+                            <div class="card h-100">
+                                <img src="@item.ImagePath" class="card-img-top" alt="@item.Name" style="height:100px;object-fit:cover" />
+                                <div class="card-body">
+                                    <h5 class="card-title"> @item.Name </h5>
+                                    <p class="card-text"> @item.Year </p>
+                                    <p class="card-text"> @item.Description </p>
+                                    <ul class="list-styled">
+                                        <li><strong> Family: </strong> @item.Family </li>
+                                        <li><strong> Category: </strong> @item.CategoryName </li>
+                                        <li><strong> Game Weight: </strong> @item.GameWeight </li>
+                                        <li><strong> Minimum Players: </strong> @item.MinPlayers </li>
+                                        <li><strong> Maximum Players: </strong> @item.MaxPlayers </li>
+                                        <li><strong> Age Recommend: </strong> @item.MfgAgeRec </li>
+                                        <li><strong> Ranking: </strong> @item.RankInboardgame </li>
                                     </ul>
-                                        <a href = "/Home/Details?id=@item.BGGId" class= "btn btn-secondary" target = "_blank" > View Detail </a>
-                               </div >
-                            </div >
-                        </div >
+                                    <a href="/Home/Details?id=@item.BGGId" class="btn btn-secondary" target="_blank"> View Detail </a>
+                                </div>
+                            </div>
+                        </div>
                     }
-                </div >
-            </div >
+                </div>
+            </div>
         }
-     }
-</form >
+    }
+    else
+    {
+        <h2 class="text-danger text-center">Oops! No matching boarding games returned...</h2>
+    }
+</form>
 
