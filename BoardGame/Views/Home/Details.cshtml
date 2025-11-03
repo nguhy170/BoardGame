@@ -19,6 +19,9 @@
         b.RankInboardgame,
         b.Family,
         b.ImagePath,
+        b.RankInstrategygames,
+        b.RankInfamilygames,
+        b.RankInthematic,
         c.Category AS CategoryName
         FROM dbo.BoardGame as b
         JOIN dbo.GameCategory as gc ON b.BGGId = gc.BGGId
@@ -42,14 +45,47 @@
                         <h2 class="card-title"> @data.Name </h2>
                         <p class="card-text"> @data.Description </p>
                         <ul class="list-styled">
-                            <li><strong> Year: </strong> @data.Year </li>
-                            <li><strong> Family: </strong> @data.Family </li>
                             <li><strong> Category: </strong> @data.CategoryName </li>
-                            <li><strong> Game Weight: </strong> @data.GameWeight </li>
-                            <li><strong> Minimum Players: </strong> @data.MinPlayers </li>
-                            <li><strong> Maximum Players: </strong> @data.MaxPlayers </li>
-                            <li><strong> Age Recommend: </strong> @data.MfgAgeRec </li>
-                            <li><strong> Ranking: </strong> @data.RankInboardgame </li>
+                            @if (data.Year != null)
+                            {
+                                <li><strong> Year: </strong> @data.Year </li>
+                            }
+                            @if (data.Family != null)
+                            {
+                                <li><strong> Family: </strong> @data.Family </li>
+                            }
+                            @if (data.GameWeight != null)
+                            {
+                                <li><strong> Game Weight: </strong> @data.GameWeight </li>
+                            }
+                            @if (data.MinPlayers != null)
+                            {
+                                <li><strong> Minimum Players: </strong> @data.MinPlayers </li>
+                            }
+                            @if (data.MaxPlayers != null)
+                            {
+                                <li><strong> Maximum Players: </strong> @data.MaxPlayers </li>
+                            }
+                            @if (data.MfgAgeRec != null)
+                            {
+                                <li><strong> Age Recommend: </strong> @data.MfgAgeRec </li>
+                            }
+                            @if (data.RankInboardgame != null)
+                            {
+                                <li><strong> Ranking in board game: </strong>@data.RankInboardgame</li>
+                            }
+                            @if (data.RankInstrategygames != null)
+                            {
+                                <li><strong> Ranking in strategy games: </strong>@data.RankInstrategygames</li>
+                            }
+                            @if (data.RankInfamilygames != null)
+                            {
+                                <li><strong> Ranking in family games: </strong>@data.RankInfamilygames</li>
+                            }
+                            @if (data.RankInthematic != null)
+                            {
+                                <li><strong> Ranking in thematic: </strong>@data.RankInthematic</li>
+                            }
                         </ul>
                         <a href="/Home/Index" class="btn btn-secondary" target="_blank">Back to Games List</a>
                     </div>
