@@ -19,22 +19,22 @@
 
     //define the query to be run
     var selectQueryString = @"
-SELECT b.BGGId,
-b.Name,
-b.Description,
-YEAR(b.YearPublished) AS Year,
-ROUND(b.GameWeight,1) AS GameWeight,
-b.MinPlayers,
-b.MaxPlayers,
-b.MfgAgeRec,
-b.RankInboardgame,
-b.Family,
-b.ImagePath,
-c.Category AS CategoryName
-FROM dbo.BoardGame as b
-JOIN dbo.GameCategory as gc ON b.BGGId = gc.BGGId
-JOIN dbo.Category as c ON gc.Category = c.CategoryID
-WHERE b.Name LIKE '%' + @0 + '%'";
+        SELECT b.BGGId,
+        b.Name,
+        b.Description,
+        YEAR(b.YearPublished) AS Year,
+        ROUND(b.GameWeight,1) AS GameWeight,
+        b.MinPlayers,
+        b.MaxPlayers,
+        b.MfgAgeRec,
+        b.RankInboardgame,
+        b.Family,
+        b.ImagePath,
+        c.Category AS CategoryName
+        FROM dbo.BoardGame as b
+        JOIN dbo.GameCategory as gc ON b.BGGId = gc.BGGId
+        JOIN dbo.Category as c ON gc.Category = c.CategoryID
+        WHERE b.Name LIKE '%' + @0 + '%'";
 
     //add condition when selecting the category name
     //if the variable selectcategories not an empty string
@@ -159,10 +159,10 @@ WHERE b.Name LIKE '%' + @0 + '%'";
                                 <div class="card h-100">
                                     <img src="@item.ImagePath" class="card-img-top" alt="@item.Name" style="height:100px;object-fit:cover" />
                                     <div class="card-body">
-                                        <h5 class="card-title"> @item.Name </h5>
-                                        <p1 class="card-text"> @item.Year </p1>
-                                        <p1 class="card-text"> @item.Description </p1>
+                                        <h3 class="card-title"> @item.Name </h3>
+                                        <p2 class="card-text"> @item.Description </p2>
                                         <ul class="list-styled">
+                                            <li><strong> Year: </strong> @item.Year </li>
                                             <li><strong> Family: </strong> @item.Family </li>
                                             <li><strong> Category: </strong> @item.CategoryName </li>
                                             <li><strong> Game Weight: </strong> @item.GameWeight </li>
