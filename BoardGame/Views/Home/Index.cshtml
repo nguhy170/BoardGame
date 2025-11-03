@@ -71,10 +71,12 @@ WHERE b.Name LIKE '%' + @0 + '%'";
     <link rel="stylesheet" href="/Content/Site.css">
 </head>
 <body>
-    <div id="heading-container" class="text-center bg-light py-1 mt-2">
+    <div class="text-center bg-light py-1 mt-2">
         <h2 class="text-center">Board Game Information</h2>
     </div>
-
+    <div class="mt-5 mb-3 text-center">
+        <p>Search and explore your favorite board games!</p>
+    </div>
     <form action="/Home/Index" method="get" class="row">
         <input type="hidden" id="showView" name="showView" value="@showView" />
         <div class="col-2 mt-5 mb-2 justify-content-start">
@@ -158,8 +160,8 @@ WHERE b.Name LIKE '%' + @0 + '%'";
                                     <img src="@item.ImagePath" class="card-img-top" alt="@item.Name" style="height:100px;object-fit:cover" />
                                     <div class="card-body">
                                         <h5 class="card-title"> @item.Name </h5>
-                                        <p class="card-text"> @item.Year </p>
-                                        <p class="card-text"> @item.Description </p>
+                                        <p1 class="card-text"> @item.Year </p1>
+                                        <p1 class="card-text"> @item.Description </p1>
                                         <ul class="list-styled">
                                             <li><strong> Family: </strong> @item.Family </li>
                                             <li><strong> Category: </strong> @item.CategoryName </li>

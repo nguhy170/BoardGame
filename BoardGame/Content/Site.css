@@ -11,6 +11,7 @@ body {
 
 h2 {
     color: #114382;
+    font-size: 36px;
 }
 .bg-light {
     background-color: #d6e6fc !important;
@@ -58,10 +59,22 @@ h2 {
     background-color: #114382;
     color: #ffffff;
 }
+p {
+    font-size: 28px;
+    font-weight: bold;
+    color: #79b1e6;
+}
 .dl-horizontal dt {
     white-space: normal;
 }
-
+/* Card design */
+.card {
+    background-color: #d6e6fc;
+    border-color: #114382;
+}
+.card:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
