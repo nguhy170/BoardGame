@@ -7,30 +7,22 @@
             "FROM dbo.Category AS subCat " +
             "JOIN dbo.GameCategory AS pCat " +
             "ON subCat.CategoryID = pCat.Category " +
+            "GROUP BY subCat.CategoryID,pcat.category, subCat.category " +
             "ORDER BY pcat.category, subCat.category";
     var catData = db.Query(catSql);
 
     if (IsPost)
     {
 
-        var sql = "INSERT INTO BoardGame (boardgameName, boardgameYear, boardgameDescription, boardgameMinPlay, boardgameMaxPlay, boardgameAgeRec, boardgameRankin,boardgameImage, ImagePath, categoryID) " +
-                        "VALUES(@0, @1, @2, @3, @4, @5, @6, @7, @8, @9); SELECT SCOPE_IDENTITY()";
+        var sql = "INSERT INTO BoardGame (BGGId, Name, YearPublished, Description, MinPlayers, MaxPlayers, MfgAgeRec, RankInboardgame) " +
+                    "VALUES((SELECT ISNULL(MAX(BGGId),0) + 1 FROM BoardGame),@0, @1, @2, @3, @4, @5, @6); SELECT SCOPE_IDENTITY()";
 
-        var data = db.QueryValue(sql, Request.Form["boardgameName"],
-        Request.Form["boardgameYear"],
-        Request.Form["boardgameDescription"],
-        Request.Form["boardgameMinPlay"],
-        Request.Form["boardgameMaxPlay"],
-        Request.Form["boardgameAgeRec"],
-        Request.Form["boardgameRankin"],
-        Request.Form["boardgameImage"],
-        Request.Form["ImagePath"],
-        Request.Form["categoryID"]
-        );
+        var data = db.QueryValue(sql, Request.Form["boardgameName"], Request.Form["boardgameYear"], Request.Form["boardgameDescription"],
+            Request.Form["boardgameMinPlay"], Request.Form["boardgameMaxPlay"], Request.Form["boardgameAgeRec"], Request.Form["boardgameRankin"]);
 
         var newID = db.GetLastInsertId();
-        Response.Redirect("/Home/Edit?id=" + newID);
-
+        Response.Redirect("/Management/Edit?id=" + newID);
+        
 
     }
 }
@@ -70,7 +62,7 @@
             <div class="col-10">
                 <label for="BGCategory">Category</label>
                 <select id="BGCategory" name="categoryID" required class="form-control mt-2">
-                    <option value="">Select...</option>
+                    <option value="">Select Category</option>
                     @foreach (var row in catData)
                     {
                         <option value="@row.categoryID">@row.categoryName</option>
@@ -114,6 +106,7 @@
                         placeholder="Board Game Image URL..." title="Board Game Image URL" />
             </div>
         </div>
+
         <div class="row mb-5 justify-content-end mt-2">
             <div class="col-2 text-right">
                 <button type="submit" class="btn btn-success">Save</button>
