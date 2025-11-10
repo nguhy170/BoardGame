@@ -101,7 +101,7 @@
             </div>
         </div>
         <!--Create button options to view data in table mode or card mode-->
-        <div class="col-12 mt-1 mb-2 d-flex justify-content-end gap-2">
+        <div class="col-10 mt-1 mb-2 d-flex justify-content-end gap-2">
             <button type="submit" id="showTable" class="btn btn-outline-primary" onclick="document.getElementById('showView').value = 'table'">Table View</button>
             <button type="submit" id="showCard" class=" btn btn-outline-secondary" onclick="document.getElementById('showView').value = 'card'">Card View</button>
         </div>
@@ -122,7 +122,7 @@
                                     <th scope="col"> Min Players</th>
                                     <th scope="col"> Max Players</th>
                                     <th scope="col"> Age Recommend</th>
-                                    <th scope="col">Ranking </th>
+                                    <th scope="col"> Ranking </th>
                                     <th scope="col"> Details </th>
                                 </tr>
                             </thead>
@@ -160,7 +160,7 @@
                                     <img src="@item.ImagePath" class="card-img-top" alt="@item.Name" style="height:100px;object-fit:cover" />
                                     <div class="card-body">
                                         <h3 class="card-title"> @item.Name </h3>
-                                        <p class="card-text"> @item.Description </p>
+                                        <p1 class="card-text"> @item.Description </p1>
                                         <ul class="list-styled">
                                             <li><strong> Year: </strong> @item.Year </li>
                                             <li><strong> Family: </strong> @item.Family </li>

@@ -1,7 +1,126 @@
-﻿
+﻿@using WebMatrix.Data
+
 @{
-    ViewBag.Title = "Create";
+    var db = Database.Open("BoardGame");
+
+    var catSql = "SELECT subCat.CategoryID, CONCAT(pCat.Category, ' - ', subCat.Category) AS categoryName " +
+            "FROM dbo.Category AS subCat " +
+            "JOIN dbo.GameCategory AS pCat " +
+            "ON subCat.CategoryID = pCat.Category " +
+            "ORDER BY pcat.category, subCat.category";
+    var catData = db.Query(catSql);
+
+    if (IsPost)
+    {
+
+        var sql = "INSERT INTO BoardGame (boardgameName, boardgameYear, boardgameDescription, boardgameMinPlay, boardgameMaxPlay, boardgameAgeRec, boardgameRankin,boardgameImage, ImagePath, categoryID) " +
+                        "VALUES(@0, @1, @2, @3, @4, @5, @6, @7, @8, @9); SELECT SCOPE_IDENTITY()";
+
+        var data = db.QueryValue(sql, Request.Form["boardgameName"],
+        Request.Form["boardgameYear"],
+        Request.Form["boardgameDescription"],
+        Request.Form["boardgameMinPlay"],
+        Request.Form["boardgameMaxPlay"],
+        Request.Form["boardgameAgeRec"],
+        Request.Form["boardgameRankin"],
+        Request.Form["boardgameImage"],
+        Request.Form["ImagePath"],
+        Request.Form["categoryID"]
+        );
+
+        var newID = db.GetLastInsertId();
+        Response.Redirect("/Home/Edit?id=" + newID);
+
+
+    }
 }
 
-<h2>Create</h2>
+<div class="bg-light py-1 mt-2 mb-2">
+    <h2 class="text-center">Create Board Game</h2>
+</div>
+
+<div class="container-fluid">
+    <form method="post" action="/Home/Create" class="create-boardgame">
+        <div class="row mb-2">
+            <div class="col-3">
+                <label>Board Game #</label>
+                [Auto]
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-10">
+                <label for="BGName">Name</label>
+                <input type="text" id="BGName" name="boardgameName" maxlength="150" required class="form-control mt-2" placeholder="Board Game Name..." title="Board Game Name" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-10">
+                <label for="BGYear">Year</label>
+                <input type="number" id="BGYear" name="boardgameYear" step="1" required class="form-control mt-2"
+                        placeholder="1800" min="1800" max="2025" title="Year Published" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-12">
+                <label for="BGDesc">Description</label>
+                <textarea id="BGDesc" name="boardgameDescription" maxlength="5000" required class="form-control mt-2" placeholder="Board Game Description..." title="Board Game Description" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-10">
+                <label for="BGCategory">Category</label>
+                <select id="BGCategory" name="categoryID" required class="form-control mt-2">
+                    <option value="">Select...</option>
+                    @foreach (var row in catData)
+                    {
+                        <option value="@row.categoryID">@row.categoryName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-10">
+                <label for="BGMinPlay">Minimum Players</label>
+                <input type="number" id="BGMinPlay" name="boardgameMinPlay" step="1" required class="form-control mt-2"
+                        placeholder="0" min="1" max="10" title="Board Game Min Players" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-10">
+                <label for="BGMaxPlay">Maximum Players</label>
+                <input type="number" id="BGMaxPlay" name="boardgameMaxPlay" step="1" required class="form-control mt-2"
+                        placeholder="0" min="1" max="10" title="Board Game Max Players" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-10">
+                <label for="BGAgeRec">Age Recommend</label>
+                <input type="number" id="BGAgeRec" name="boardgameAgeRec" step="1" required class="form-control mt-2"
+                        placeholder="5" min="5" max="100" title="Board Game Age Recommendation" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-10">
+                <label for="BGRankIn">Rank In Board Game</label>
+                <input type="number" id="BGRankIn" name="boardgameRankin" required class="form-control mt-2"
+                        placeholder="0"  title="Board Game Rank" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-10">
+                <label for="BGImage">Board Game Image</label>
+                <input type="text" id="BGImage" name="boardgameImage" maxlength="3000" class="form-control mt-2"
+                        placeholder="Board Game Image URL..." title="Board Game Image URL" />
+            </div>
+        </div>
+        <div class="row mb-5 justify-content-end mt-2">
+            <div class="col-2 text-right">
+                <button type="submit" class="btn btn-success">Save</button>
+                <button type="reset" class="btn btn-danger">Clear</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 

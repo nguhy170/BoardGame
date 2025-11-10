@@ -1,9 +1,4 @@
-﻿/* Set padding to keep content from hitting the edges */
-.body-content {
-    margin-top: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
-}
+﻿
 /* Color for headings and buttons*/
 body {
     background-color: #000000;
@@ -59,6 +54,11 @@ h2 {
     background-color: #114382;
     color: #ffffff;
 }
+p {
+    font-size: 28px;
+    font-weight: bold;
+    color: #79b1e6;
+}
 .dl-horizontal dt {
     white-space: normal;
 }
@@ -70,9 +70,10 @@ h2 {
 .card:hover {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+.card-text {
+    color: black;
+}
+
+.create-boardgame label {
+    color: #98F5F9;
 }

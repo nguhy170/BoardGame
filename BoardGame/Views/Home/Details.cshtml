@@ -25,7 +25,7 @@
         c.Category AS CategoryName
         FROM dbo.BoardGame as b
         JOIN dbo.GameCategory as gc ON b.BGGId = gc.BGGId
-        JOIN dbo.Category as c ON gc.Category = c.CategoryID
+        JOIN dbo.Category as c ON gc.Category = c.CategoryID 
         WHERE b.BGGId = @0";
 
     var data = db.QuerySingle(selectQueryString, id);
@@ -70,22 +70,7 @@
                             {
                                 <li><strong> Age Recommend: </strong> @data.MfgAgeRec </li>
                             }
-                            @if (data.RankInboardgame != null)
-                            {
-                                <li><strong> Ranking in board game: </strong>@data.RankInboardgame</li>
-                            }
-                            @if (data.RankInstrategygames != null)
-                            {
-                                <li><strong> Ranking in strategy games: </strong>@data.RankInstrategygames</li>
-                            }
-                            @if (data.RankInfamilygames != null)
-                            {
-                                <li><strong> Ranking in family games: </strong>@data.RankInfamilygames</li>
-                            }
-                            @if (data.RankInthematic != null)
-                            {
-                                <li><strong> Ranking in thematic: </strong>@data.RankInthematic</li>
-                            }
+                               
                         </ul>
                         <a href="/Home/Index" class="btn btn-secondary" target="_blank">Back to Games List</a>
                     </div>
