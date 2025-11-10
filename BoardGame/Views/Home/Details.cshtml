@@ -46,6 +46,9 @@
                         <p class="card-text"> @data.Description </p>
                         <ul class="list-styled">
                             <li><strong> Category: </strong> @data.CategoryName </li>
+                            <!--Check if data is empty on the table-->
+                            <!--If it empty, not show the detail on the card view-->
+                            <!--If it is not empty, show the detail on the card view-->
                             @if (data.Year != null)
                             {
                                 <li><strong> Year: </strong> @data.Year </li>

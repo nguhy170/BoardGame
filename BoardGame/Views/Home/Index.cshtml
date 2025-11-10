@@ -37,7 +37,7 @@
         WHERE b.Name LIKE '%' + @0 + '%'";
 
     //add condition when selecting the category name
-    //if the variable selectcategories not an empty string
+    //if the variable selectcategories not an empty string - user click on the categoyry option
     if (selectedcategories != "")
     {
         //it will only run the category name start from the first order in the column name when user choose the category
@@ -50,7 +50,7 @@
     var data = (selectedcategories != "")
         //If not empty string, run the category search
         ? db.Query(selectQueryString, searchText, selectedcategories)
-        //Else, run the board game search
+        //Else, run the board game detail and search functionality
         : db.Query(selectQueryString, searchText);
 
 }
@@ -106,8 +106,9 @@
             <button type="submit" id="showCard" class=" btn btn-outline-secondary" onclick="document.getElementById('showView').value = 'card'">Card View</button>
         </div>
 
+        <!--Show table view and card view details-->
         @if (data.Count() > 0)
-        {
+        {   
             if (showView == "table")
             {
                 <div id="tableView">
