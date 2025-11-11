@@ -30,9 +30,11 @@
         b.RankInboardgame,
         b.Family,
         b.ImagePath,
-        c.Category AS CategoryName
+        c.Category AS CategoryName,
+        t.ThemeID
         FROM dbo.BoardGame as b
-        JOIN dbo.GameCategory as gc ON b.BGGId = gc.BGGId
+        JOIN dbo.GameInThemes as t ON b.BGGId = t.BGGId
+        JOIN dbo.GameCategory as gc ON t.BGGId = gc.BGGId
         JOIN dbo.Category as c ON gc.Category = c.CategoryID
         WHERE b.Name LIKE '%' + @0 + '%'";
 
@@ -86,7 +88,7 @@
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
 
-        <div class="col-10 mt-2 mb-2">
+        <div class="col-4 mt-5 mb-2">
             <div class="d-flex gap-4">
                 <select name="searchCategory" class="form-control">
                     <option value="" @IsSelected("")>All Categories</option>
@@ -101,7 +103,7 @@
             </div>
         </div>
         <!--Create button options to view data in table mode or card mode-->
-        <div class="col-10 mt-1 mb-2 d-flex justify-content-end gap-2">
+        <div class="col-12 mt-1 mb-2 d-flex justify-content-end gap-2">
             <button type="submit" id="showTable" class="btn btn-outline-primary" onclick="document.getElementById('showView').value = 'table'">Table View</button>
             <button type="submit" id="showCard" class=" btn btn-outline-secondary" onclick="document.getElementById('showView').value = 'card'">Card View</button>
         </div>
@@ -116,14 +118,16 @@
                         <table class="table table-striped" style="table-layout: fixed; width: 100%;">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Year</th>
-                                    <th scope="col">Game Weight</th>
+                                    <th scope="col"> #</th>
+                                    <th scope="col"> Name</th>
+                                    <th scope="col"> Year</th>
+                                    <th scope="col"> Game Weight</th>
                                     <th scope="col"> Min Players</th>
                                     <th scope="col"> Max Players</th>
                                     <th scope="col"> Age Recommend</th>
                                     <th scope="col"> Ranking </th>
+                                    <th scope="col"> Family</th>
+                                    <th scope="col"> Theme</th>
                                     <th scope="col"> Details </th>
                                 </tr>
                             </thead>
@@ -139,6 +143,8 @@
                                         <td> @item.MaxPlayers </td>
                                         <td> @item.MfgAgeRec </td>
                                         <td> @item.RankInboardgame </td>
+                                        <td> @item.Family</td>
+                                        <td> @item.ThemeID</td>
                                         <td>
                                             <a href="/Home/Details?id=@item.BGGId" class="btn btn-sm btn-secondary">View Detail</a>
                                         </td>
@@ -171,6 +177,7 @@
                                             <li><strong> Maximum Players: </strong> @item.MaxPlayers </li>
                                             <li><strong> Age Recommend: </strong> @item.MfgAgeRec </li>
                                             <li><strong> Ranking: </strong> @item.RankInboardgame </li>
+                                            <li><strong> Theme:</strong>@item.ThemeID</li>
                                         </ul>
                                         <a href="/Home/Details?id=@item.BGGId" class="btn btn-secondary" target="_blank"> View Detail </a>
                                     </div>

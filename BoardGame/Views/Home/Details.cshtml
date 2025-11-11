@@ -22,10 +22,13 @@
         b.RankInstrategygames,
         b.RankInfamilygames,
         b.RankInthematic,
-        c.Category AS CategoryName
-        FROM dbo.BoardGame as b
-        JOIN dbo.GameCategory as gc ON b.BGGId = gc.BGGId
-        JOIN dbo.Category as c ON gc.Category = c.CategoryID 
+        c.Category AS CategoryName,
+        t.ThemeName
+        FROM dbo.BoardGame AS b
+        LEFT JOIN dbo.GameCategory AS gc ON b.BGGId = gc.BGGId
+        LEFT JOIN dbo.Category AS c ON gc.Category = c.CategoryID
+        LEFT JOIN dbo.GameInThemes AS gt ON b.BGGId = gt.BGGId
+        LEFT JOIN dbo.Theme AS t ON gt.ThemeID = t.ThemeID
         WHERE b.BGGId = @0";
 
     var data = db.QuerySingle(selectQueryString, id);
@@ -73,7 +76,10 @@
                             {
                                 <li><strong> Age Recommend: </strong> @data.MfgAgeRec </li>
                             }
-                               
+                            @if (data.ThemeName != null)
+                            {
+                                <li><strong> Theme: </strong> @data.ThemeName </li>
+                            }
                         </ul>
                         <a href="/Home/Index" class="btn btn-secondary" target="_blank">Back to Games List</a>
                     </div>

@@ -1,4 +1,9 @@
-﻿
+﻿﻿ /* Set padding to keep content from hitting the edges */
+.body-content {
+    margin-top: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+}
 /* Color for headings and buttons*/
 body {
     background-color: #000000;
@@ -76,4 +81,14 @@ p {
 
 .create-boardgame label {
     color: #98F5F9;
+}
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 1000px;
 }
