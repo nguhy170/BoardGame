@@ -13,32 +13,37 @@
     var catData = db.Query(catSql);
 
 
-    var family = "SELECT DISTINCT Family FROM dbo.BoardGame";
+    var family = "SELECT gf.FamilyCode, CONCAT(gf.FamilyCode, ' - ', gf.Family) AS FamilyName " +
+            "FROM dbo.GameFamily as gf " +
+            "JOIN dbo.BoardGame as b ON gf.FamilyCode = b.Family " +
+            "GROUP BY gf.FamilyCode, gf.Family " +
+            "ORDER BY gf.FamilyCode ASC";
     var familyData = db.Query(family);
 
-    var theme = "SELECT DISTINCT t.ThemeID, t.ThemeName " +
-                "FROM dbo.Theme AS t " +
-                "JOIN dbo.GameInThemes as gt ON t.ThemeID = gt.ThemeID " +
-                "ORDER BY ThemeID, ThemeName";
+    var theme = "SELECT t.ThemeID, CONCAT (t.ThemeID, ' - ', t.ThemeName) AS ThemeName " +
+            "FROM dbo.Theme AS t " +
+            "JOIN dbo.GameInThemes as gt ON t.ThemeID = gt.ThemeID " +
+            "GROUP BY t.ThemeID, t.ThemeName " +
+            "ORDER BY t.ThemeID ASC";
     var themeData = db.Query(theme);
 
     if (IsPost)
-    {   
+    {
         //Handle the board game id in a new query value
         var newBGGId = db.QueryValue("SELECT MAX(BGGId) + 1 FROM dbo.BoardGame");
 
         //Insert new data into BoardGame table with according values
         var sql = "INSERT INTO BoardGame (BGGId, Name, YearPublished, Description, Family, MinPlayers, MaxPlayers, MfgAgeRec, RankInboardgame,ImagePath) " +
                     "VALUES( @0, @1, @2, @3, @4, @5, @6, @7, @8, @9)";
-        
+
         //Call the new board game id variable to the new query value that handle all create data 
         var newdata = db.QueryValue(sql, newBGGId, Request.Form["Name"], Request.Form["YearPublished"], Request.Form["Description"], Request.Form["Family"],
             Request.Form["MinPlayers"], Request.Form["MaxPlayers"], Request.Form["MfgAgeRec"], Request.Form["RankInboardgame"], Request.Form["ImagePath"], Request.Form["CategoryID"]);
 
-        //Insert new created data into the gamecategory table
+        //Execute to the gamecategory table by insert the new create board game to the table,handle the new boardgame id
         db.Execute("INSERT INTO GameCategory(BGGId, Category) VALUES (@0, @1)", newBGGId, Request.Form["CategoryID"]);
 
-        //Insert new create data into the gameintheme table
+        //Execute to the gameintheme table by insert the new create board game to the table,handle the new boardgame id
         db.Execute("INSERT INTO GameInThemes(BGGId, ThemeID) VALUES (@0, @1)", newBGGId, Request.Form["ThemeID"]);
 
         Response.Redirect("/Home/Details?id=" + newBGGId);
@@ -57,8 +62,10 @@
     <form method="post" action="/Home/Create" class="create-boardgame">
         <div class="row mb-2">
             <div class="col-3">
-                <label>Board Game #</label>
-                [Auto]
+                <label>
+                    Board Game #
+                    [Auto]
+                </label>
             </div>
         </div>
         <div class="row mb-2">
@@ -71,7 +78,7 @@
             <div class="col-10">
                 <label for="BGYear">Year</label>
                 <input type="number" id="BGYear" name="YearPublished" step="1" required class="form-control mt-2"
-                       placeholder="1800" min="1800" max="2025" title="Year Published" />
+                       placeholder="1800-2025" min="1800" max="2025" title="Year Published" />
             </div>
         </div>
         <div class="row mb-2">
@@ -96,11 +103,11 @@
         <div class="row mb-2">
             <div class="col-10">
                 <label for="BGFamily">Family</label>
-                <select id="BGFamily" name="family" required class="form-control mt-2">
+                <select id="BGFamily" name="Family" required class="form-control mt-2">
                     <option value="">Select Family</option>
                     @foreach (var row in familyData)
                     {
-                        <option value="@row.family">@row.family</option>
+                        <option value="@row.FamilyCode">@row.FamilyName</option>
                     }
                 </select>
             </div>
@@ -123,28 +130,28 @@
             <div class="col-10">
                 <label for="BGMinPlay">Minimum Players</label>
                 <input type="number" id="BGMinPlay" name="MinPlayers" step="1" required class="form-control mt-2"
-                       placeholder="0" min="1" max="10" title="Board Game Min Players" />
+                       placeholder="1-10" min="1" max="10" title="Board Game Min Players" />
             </div>
         </div>
         <div class="row mb-2">
             <div class="col-10">
                 <label for="BGMaxPlay">Maximum Players</label>
                 <input type="number" id="BGMaxPlay" name="MaxPlayers" step="1" required class="form-control mt-2"
-                       placeholder="0" min="1" max="10" title="Board Game Max Players" />
+                       placeholder="1-20" min="1" max="20" title="Board Game Max Players" />
             </div>
         </div>
         <div class="row mb-2">
             <div class="col-10">
                 <label for="BGAgeRec">Age Recommend</label>
                 <input type="number" id="BGAgeRec" name="MfgAgeRec" step="1" required class="form-control mt-2"
-                       placeholder="5" min="5" max="100" title="Board Game Age Recommendation" />
+                       placeholder="5-100" min="5" max="100" title="Board Game Age Recommendation" />
             </div>
         </div>
         <div class="row mb-2">
             <div class="col-10">
                 <label for="BGRankIn">Rank In Board Game</label>
                 <input type="number" id="BGRankIn" name="RankInboardgame" required class="form-control mt-2"
-                       placeholder="0" min="0" max="21926" title="Board Game Rank" />
+                       placeholder="0-21296" min="0" max="21926" title="Board Game Rank" />
             </div>
         </div>
         <div class="row mb-2">
@@ -153,10 +160,18 @@
                 <input type="text" id="BGImage" name="ImagePath" maxlength="3000" required class="form-control mb-2" placeholder="Image URL..." title="Image URL" value="" />
             </div>
         </div>
+
         <div class="row mb-5 justify-content-end mt-2">
             <div class="col-2 text-right">
                 <button type="submit" name="action" value="insert" class="btn btn-success">Save</button>
                 <button type="reset" name="action" value="clear" class="btn btn-danger">Clear</button>
+            </div>
+        </div>
+
+        <div class="row mb-2 mt-10">
+            <div class="col">
+                <label for="newTheme" class="mb-2">The game theme you want does not have on the selection list? Add here:</label>
+                <input type="text" id="newTheme" name="ImagePath" maxlength="3000" required class="form-control mb-2" placeholder="Image URL..." title="Image URL" value="" />
             </div>
         </div>
     </form>
