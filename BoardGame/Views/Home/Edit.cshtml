@@ -1,7 +1,194 @@
-﻿
+﻿@using WebMatrix.Data
+
+@{
+    // 1. connect to database
+    var db = Database.Open("BoardGame");
+
+    // 2. get list of categories to select from
+    var catSql = "SELECT subCat.CategoryID, CONCAT(pCat.Category, ' - ', subCat.Category) AS categoryName " +
+            "FROM dbo.Category AS subCat " +
+            "JOIN dbo.GameCategory AS pCat " +
+            "ON subCat.CategoryID = pCat.Category " +
+            "GROUP BY subCat.CategoryID,pcat.category, subCat.category " +
+            "ORDER BY pcat.category, subCat.category";
+    var catData = db.Query(catSql);
+
+    //get list of family to select from
+    var family = "SELECT gf.FamilyCode, CONCAT(gf.FamilyCode, ' - ', gf.Family) AS FamilyName " +
+        "FROM dbo.GameFamily as gf " +
+        "JOIN dbo.BoardGame as b ON gf.FamilyCode = b.Family " +
+        "GROUP BY gf.FamilyCode, gf.Family " +
+        "ORDER BY gf.FamilyCode ASC";
+    var familyData = db.Query(family);
+
+    //get list of theme to select from
+    var theme = "SELECT t.ThemeID, CONCAT (t.ThemeID, ' - ', t.ThemeName) AS ThemeName " +
+            "FROM dbo.Theme AS t " +
+            "JOIN dbo.GameInThemes as gt ON t.ThemeID = gt.ThemeID " +
+            "GROUP BY t.ThemeID, t.ThemeName " +
+            "ORDER BY t.ThemeID ASC";
+    var themeData = db.Query(theme);
+
+    // 3. handle update
+    if (IsPost)
+    {
+        try
+        {
+            var sql = "UPDATE BoardGame SET Name = @0, YearPublished = @1, Description = @2, Family = @3, MinPlayers = @4, MaxPlayers = @5, " +
+                    "MfgAgeRec = @6, RankInboardgame = @7, ImagePath = @8 WHERE BGGId = @9";
+
+            var data = db.Execute(sql, Request.Form["Name"],
+            Request.Form["YearPublished"],
+            Request.Form["Description"],
+            Request.Form["Family"],
+            Request.Form["MinPlayers"],
+            Request.Form["MaxPlayers"],
+            Request.Form["MfgAgeRec"],
+            Request.Form["RankInboardgame"],
+            Request.Form["ImagePath"],
+            Request.QueryString["id"]
+            );
+
+            // show success message
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Record Updated!</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        catch
+        {
+            // show fail message
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Update Error!</strong> That record could not be updated :(
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+    } // end isPost
+
+    // 4. display selected record (AFTER update)
+    var itemSql = "SELECT * FROM BoardGame WHERE BGGId = @0";
+    var item = db.QuerySingle(itemSql, Request.QueryString["id"]);
+
+}
 @{
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
+<div class="bg-light py-1 mt-2">
+    <h2 class="text-center">Edit Board Game</h2>
+</div>
+
+<form method="post" action="/Home/Edit?id=@item.BGGId">
+    <div class="row mb-2">
+        <div class="col">
+            <label>Board Game #</label>
+            @item.BGGId
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-6">
+            <label for="BGName">Board Game Name</label>
+            <input type="text" id="BGName" name="Name" maxlength="150" required class="form-control"
+                   placeholder="Board Game Name..." title="Board Game Name" value="@item.Name" />
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-6">
+            <label for="BGYear">Year </label>
+            <input type="text" id="BGYear" name="YearPublished" maxlength="150" required class="form-control"
+                   placeholder="1800-2025" title="Year Published" value="@item.YearPublished" />
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-6">
+            <label for="BGDescription">Year </label>
+            <input type="text" id="BGDescription" name="Description" maxlength="150" required class="form-control"
+                   placeholder="Board Game Description..." title="Year Published" value="@item.Description" />
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-3">
+            <label for="BGCategory">Category</label>
+            <select id="BGCategory" name="CategoryID" required class="form-control">
+                <option value="">Select Category</option>
+                @foreach (var row in catData)
+                {
+                    <option value="@row.CategoryID" @(row.CategoryID == item.CategoryID ? "selected" : "")>@row.categoryName</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-3">
+            <label for="BGFamily">Family</label>
+            <select id="BGFamily" name="Family" required class="form-control">
+                <option value="">Select Family</option>
+                @foreach (var row in catData)
+                {
+                    <option value="@row.FamilyCode" @(row.FamilyCode == item.FamilyCode ? "selected" : "")>@row.FamilyName</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-3">
+            <label for="BGTheme">Theme</label>
+            <select id="BGTheme" name="ThemeID" required class="form-control">
+                <option value="">Select Theme</option>
+                @foreach (var row in catData)
+                {
+                    <option value="@row.ThemeID" @(row.ThemeID == item.ThemeID ? "selected" : "")>@row.ThemeName</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-2">
+            <label for="BGMinPlay">Minimum Players</label>
+            <input type="number" id="BGMinPlay" name="MinPlayers" step="1" required class="form-control"
+                   placeholder="1-10" min="1" max="10" title="Board Game Min Players" value="@item.MinPlayers" />
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-2">
+            <label for="BGMaxPlay">Maximum Players</label>
+            <input type="number" id="BGMaxPlay" name="MaxPlayers" step="1" required class="form-control"
+                   placeholder="1-20" min="1" max="20" title="Board Game Max Players" value="@item.MaxPlayers" />
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-2">
+            <label for="BGAgeRec">Age Recommend</label>
+            <input type="number" id="BGAgeRec" name="MfgAgeRec" step="1" required class="form-control"
+                   placeholder="5-100" min="5" max="100" title="Board Game Age Recommendation" value="@item.MfgAgeRec" />
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-2">
+            <label for="BGRankInboardgame">Rank in board game</label>
+            <input type="number" id="BGRankInboardgame" name="RankInboardgame" step="1" required class="form-control"
+                   placeholder="0-21296" min="0" max="21296" title="Board Game Rank" value="@item.RankInboardgame" />
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col">
+            <label for="BGImagePath">Image</label>
+            <input type="text" id="BGImagePath" name="ImagePath" maxlength="3000" class="form-control"
+                   placeholder="Image URL..." title="Image URL" value="@item.ImagePath" />
+        </div>
+    </div>
+
+    <div class="row mb-2 justify-content-end">
+        <div class="col-2 text-right">
+            <a href="/Home/Edit?id=@Request.QueryString["id"]" class="btn btn-warning">Cancel</a>
+            <button type="submit" class="btn btn-success">Save</button>
+        </div>
+    </div>
+</form>
+
 

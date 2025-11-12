@@ -94,7 +94,7 @@
                     <option value="">Select Category</option>
                     @foreach (var row in catData)
                     {
-                        <option value="@row.categoryID">@row.categoryName</option>
+                        <option value="@row.CategoryID">@row.categoryName</option>
                     }
                 </select>
             </div>
@@ -171,7 +171,7 @@
         <div class="row mb-2 mt-10">
             <div class="col">
                 <label for="newTheme" class="mb-2">The game theme you want does not have on the selection list? Add here:</label>
-                <input type="text" id="newTheme" name="ImagePath" maxlength="3000" required class="form-control mb-2" placeholder="Image URL..." title="Image URL" value="" />
+                <input type="text" id="newTheme" name="newTheme" maxlength="3000" required class="form-control mb-2" placeholder="Add new theme here ..." title="Image URL" value="" />
             </div>
         </div>
     </form>
